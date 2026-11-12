@@ -7,7 +7,7 @@ Text
 
 .. figure:: ../../Images/FieldTypes/Text.svg
    :alt: Text
-   :class: float-left
+   :align: left
    :width: 64px
 
 A multiline textfield.

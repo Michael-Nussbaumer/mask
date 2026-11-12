@@ -25,7 +25,7 @@ Email
 
 .. figure:: ../../Images/FieldTypes/Email.svg
    :alt: Email
-   :class: float-left
+   :align: left
    :width: 64px
 
 This replaces the old way of using the `String` field together with eval
@@ -36,7 +36,7 @@ Folder
 
 .. figure:: ../../Images/FieldTypes/Folder.svg
    :alt: Folder
-   :class: float-left
+   :align: left
    :width: 64px
 
 This replaces the old way of using the `Group` field together with internal_type

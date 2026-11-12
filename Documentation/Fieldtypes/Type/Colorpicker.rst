@@ -7,7 +7,7 @@ Colorpicker
 
 .. figure:: ../../Images/FieldTypes/Colorpicker.svg
    :alt: Colorpicker
-   :class: float-left
+   :align: left
    :width: 64px
 
 A colorpicker for choosing color hex-values.

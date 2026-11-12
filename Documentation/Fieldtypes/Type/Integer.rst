@@ -7,7 +7,7 @@ Integer
 
 .. figure:: ../../Images/FieldTypes/Integer.svg
    :alt: Integer
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for integers.

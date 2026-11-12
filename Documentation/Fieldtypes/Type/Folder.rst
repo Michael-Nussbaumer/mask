@@ -7,7 +7,7 @@ Folder
 
 .. figure:: ../../Images/FieldTypes/Folder.svg
    :alt: Folder
-   :class: float-left
+   :align: left
    :width: 64px
 
 Select one or more folders in a folder browse window.

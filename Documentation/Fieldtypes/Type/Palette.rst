@@ -7,7 +7,7 @@ Palette
 
 .. figure:: ../../Images/FieldTypes/Palette.svg
    :alt: Palette
-   :class: float-left
+   :align: left
    :width: 64px
 
 Palettes allow you to group multiple fields. They will by default be shown next to each other.

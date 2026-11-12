@@ -7,7 +7,7 @@ Link
 
 .. figure:: ../../Images/FieldTypes/Link.svg
    :alt: Link
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for links.

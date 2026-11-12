@@ -7,7 +7,7 @@ Radiobutton
 
 .. figure:: ../../Images/FieldTypes/Radio.svg
    :alt: Radio
-   :class: float-left
+   :align: left
    :width: 64px
 
 One or more radiobuttons.

@@ -7,7 +7,7 @@ Group
 
 .. figure:: ../../Images/FieldTypes/Group.svg
    :alt: Group
-   :class: float-left
+   :align: left
    :width: 64px
 
 Select with relation to one or more other database tables.

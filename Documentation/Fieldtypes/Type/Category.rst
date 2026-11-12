@@ -11,7 +11,7 @@ Category
 
 .. figure:: ../../Images/FieldTypes/Category.svg
    :alt: Check
-   :class: float-left
+   :align: left
    :width: 64px
 
 The category type creates relations to the system category (sys_category) table field.

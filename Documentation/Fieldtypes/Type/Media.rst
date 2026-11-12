@@ -7,7 +7,7 @@ Media
 
 .. figure:: ../../Images/FieldTypes/Media.svg
    :alt: Media
-   :class: float-left
+   :align: left
    :width: 64px
 
 Media field using :ref:`FAL<t3coreapi:using-fal>`.

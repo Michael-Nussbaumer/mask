@@ -7,7 +7,7 @@ Slug
 
 .. figure:: ../../Images/FieldTypes/Slug.svg
    :alt: Slug
-   :class: float-left
+   :align: left
    :width: 64px
 
 The slug field can create a unique identifier per content element, which can be

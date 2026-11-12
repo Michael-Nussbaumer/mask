@@ -7,7 +7,7 @@ String
 
 .. figure:: ../../Images/FieldTypes/String.svg
    :alt: String
-   :class: float-left
+   :align: left
    :width: 64px
 
 A simple input field for a short line of text.
