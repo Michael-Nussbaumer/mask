@@ -20,7 +20,7 @@ $contentColumns = $tcaCodeGenerator->generateFieldsTca('tt_content');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $contentColumns);
 $tcaCodeGenerator->setInlineTca();
 $tcaCodeGenerator->setElementsTca();
-$GLOBALS['TCA']['tt_content']['ctrl']['searchFields'] = $tcaCodeGenerator->addSearchFields('tt_content');
+$tcaCodeGenerator->applySearchFields('tt_content');
 $versionString = \TYPO3\CMS\Core\Utility\VersionNumberUtility::getNumericTypo3Version();
 if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($versionString) < 13004005) {
     // no longer needed in TYPO3 13.4.5 and later

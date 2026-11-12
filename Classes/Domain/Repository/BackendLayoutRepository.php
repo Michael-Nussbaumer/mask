@@ -25,6 +25,7 @@ use TYPO3\CMS\Backend\View\BackendLayout\DefaultDataProvider;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
@@ -33,13 +34,32 @@ class BackendLayoutRepository
 {
     protected QueryBuilder $backendLayoutQueryBuilder;
     protected QueryBuilder $pagesQueryBuilder;
+    protected DataProviderCollection $dataProviderCollection;
 
-    public function __construct(QueryBuilder $backendLayoutQueryBuilder, QueryBuilder $pagesQueryBuilder)
+    public function __construct(QueryBuilder $backendLayoutQueryBuilder, QueryBuilder $pagesQueryBuilder, DataProviderCollection $dataProviderCollection)
     {
+        $this->dataProviderCollection = $dataProviderCollection;
         $this->backendLayoutQueryBuilder = $backendLayoutQueryBuilder;
         // We don't want any restrictions here. In preview mode, we need to be able to retrieve the page nevertheless.
         $pagesQueryBuilder->setRestrictions($pagesQueryBuilder->getRestrictions()->removeAll());
         $this->pagesQueryBuilder = $pagesQueryBuilder;
+    }
+
+    /**
+     * TYPO3 v14 registers the data providers ("default", "pagets", ...) via dependency injection.
+     * TYPO3 v13 needs them to be added manually.
+     *
+     * @todo Remove the TYPO3 v13 branch when support for v13 is dropped.
+     */
+    protected function getDataProviderCollection(): DataProviderCollection
+    {
+        if ((new Typo3Version())->getMajorVersion() >= 14) {
+            return $this->dataProviderCollection;
+        }
+        $dataProviderCollection = GeneralUtility::makeInstance(DataProviderCollection::class);
+        $dataProviderCollection->add('default', DefaultDataProvider::class);
+        $dataProviderCollection->add('pagets', $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['pagets']);
+        return $dataProviderCollection;
     }
 
     /**
@@ -52,17 +72,14 @@ class BackendLayoutRepository
         // search all the pids for backend layouts defined in the pageTS
         foreach ($pageTsPids as $pid) {
             $pageTsConfig = BackendUtility::getPagesTSconfig($pid);
-            $dataProviderContext = GeneralUtility::makeInstance(DataProviderContext::class);
-            $dataProviderContext
-                ->setPageId(0)
-                ->setFieldName('backend_layout')
-                ->setTableName('backend_layout')
-                ->setData([])
-                ->setPageTsConfig($pageTsConfig);
-            $dataProviderCollection = GeneralUtility::makeInstance(DataProviderCollection::class);
-            $dataProviderCollection->add('default', DefaultDataProvider::class);
-            $dataProviderCollection->add('pagets', $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['pagets']);
-            $backendLayoutCollections = $dataProviderCollection->getBackendLayoutCollections($dataProviderContext);
+            $dataProviderContext = new DataProviderContext(
+                pageId: 0,
+                tableName: 'backend_layout',
+                fieldName: 'backend_layout',
+                data: [],
+                pageTsConfig: $pageTsConfig,
+            );
+            $backendLayoutCollections = $this->getDataProviderCollection()->getBackendLayoutCollections($dataProviderContext);
 
             foreach ($backendLayoutCollections['default']->getAll() as $backendLayout) {
                 $backendLayouts[$backendLayout->getIdentifier()] = $backendLayout;

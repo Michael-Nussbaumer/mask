@@ -26,10 +26,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
+use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 
 class MaskBackendPreviewEventListener
 {
@@ -40,6 +41,7 @@ class MaskBackendPreviewEventListener
     protected InlineHelper $inlineHelper;
     protected TableDefinitionCollection $tableDefinitionCollection;
     protected UriBuilder $uriBuilder;
+    protected ViewFactoryInterface $viewFactory;
 
     /**
      * @param array<string, string> $maskExtensionConfiguration
@@ -48,22 +50,24 @@ class MaskBackendPreviewEventListener
         array $maskExtensionConfiguration,
         InlineHelper $inlineHelper,
         TableDefinitionCollection $tableDefinitionCollection,
-        UriBuilder $uriBuilder
+        UriBuilder $uriBuilder,
+        ViewFactoryInterface $viewFactory
     ) {
         $this->maskExtensionConfiguration = $maskExtensionConfiguration;
         $this->inlineHelper = $inlineHelper;
         $this->tableDefinitionCollection = $tableDefinitionCollection;
         $this->uriBuilder = $uriBuilder;
+        $this->viewFactory = $viewFactory;
     }
 
     public function __invoke(PageContentPreviewRenderingEvent $event): void
     {
         // Nothing to do, if it's not a Mask element.
-        if (!AffixUtility::hasMaskCTypePrefix($event->getRecord()['CType'])) {
+        if ($event->getTable() !== 'tt_content' || !AffixUtility::hasMaskCTypePrefix($event->getRecordType())) {
             return;
         }
 
-        $elementKey = AffixUtility::removeCTypePrefix($event->getRecord()['CType']);
+        $elementKey = AffixUtility::removeCTypePrefix($event->getRecordType());
         $elementTcaDefinition = $this->tableDefinitionCollection->loadElement('tt_content', $elementKey);
         // If the Mask element couldn't be found, provide a proper error message.
         if (!$elementTcaDefinition instanceof ElementTcaDefinition) {
@@ -86,26 +90,28 @@ class MaskBackendPreviewEventListener
             return;
         }
 
-        $renderingContext = GeneralUtility::makeInstance(RenderingContextFactory::class)->create();
-        $renderingContext->setRequest($this->getRequest());
-
         // Initialize view.
-        $view = GeneralUtility::makeInstance(StandaloneView::class, $renderingContext);
-        $view->setTemplatePathAndFilename($templatePathAndFilename);
+        $layoutRootPaths = null;
         if (!empty($this->maskExtensionConfiguration['layouts_backend'])) {
-            $layoutRootPath = GeneralUtility::getFileAbsFileName($this->maskExtensionConfiguration['layouts_backend']);
-            $view->setLayoutRootPaths([$layoutRootPath]);
+            $layoutRootPaths = [GeneralUtility::getFileAbsFileName($this->maskExtensionConfiguration['layouts_backend'])];
         }
+        $partialRootPaths = null;
         if (!empty($this->maskExtensionConfiguration['partials_backend'])) {
-            $partialRootPath = GeneralUtility::getFileAbsFileName($this->maskExtensionConfiguration['partials_backend']);
-            $view->setPartialRootPaths([$partialRootPath]);
+            $partialRootPaths = [GeneralUtility::getFileAbsFileName($this->maskExtensionConfiguration['partials_backend'])];
         }
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            partialRootPaths: $partialRootPaths,
+            layoutRootPaths: $layoutRootPaths,
+            templatePathAndFilename: $templatePathAndFilename,
+            request: $this->getRequest(),
+        ));
 
         // Fetch and assign some useful variables
-        $data = BackendUtility::getRecordWSOL('tt_content', (int)$event->getRecord()['uid']);
+        $row = $this->getRow($event);
+        $data = BackendUtility::getRecordWSOL('tt_content', (int)$row['uid']);
         $this->inlineHelper->addFilesToData($data);
         $this->inlineHelper->addIrreToData($data);
-        $view->assign('row', $event->getRecord());
+        $view->assign('row', $row);
         $view->assign('data', $data);
 
         // Render the preview with a standard border.
@@ -113,6 +119,22 @@ class MaskBackendPreviewEventListener
         $itemContent .= $view->render();
         $itemContent .= '</div>';
         $event->setPreviewContent($itemContent);
+    }
+
+    /**
+     * TYPO3 v14 passes a Record object instead of the database row.
+     * Templates still receive the raw row as {row} to stay backwards compatible.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getRow(PageContentPreviewRenderingEvent $event): array
+    {
+        $record = $event->getRecord();
+        // @phpstan-ignore-next-line getRecord() returns a RecordInterface since TYPO3 v14
+        if ($record instanceof RecordInterface) {
+            return $record->getRawRecord()?->toArray() ?? $record->toArray();
+        }
+        return $record;
     }
 
     /**

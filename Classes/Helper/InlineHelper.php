@@ -33,8 +33,8 @@ use TYPO3\CMS\Core\Database\RelationHandler;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Resource\FileRepository;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Methods for working with inline fields (IRRE)
@@ -205,9 +205,7 @@ class InlineHelper
         $relationHandler->start($uidList, $allowed, $mmTable, $uid, $table, $tcaFieldConf);
         foreach (array_keys($relationHandler->tableArray) as $table) {
             if (isset($GLOBALS['TCA'][$table])) {
-                $autoHiddenSelection = -1;
-                $ignoreWorkspaceFilter = ['pid' => true];
-                $relationHandler->additionalWhere[$table] = $pageRepository->enableFields($table, $autoHiddenSelection, $ignoreWorkspaceFilter);
+                $relationHandler->additionalWhere[$table] = $this->getEnableFieldsWhereClause($pageRepository, $table);
             }
         }
         $relationHandler->getFromDB();
@@ -282,7 +280,8 @@ class InlineHelper
             $restrictions->removeByType(HiddenRestriction::class);
         }
 
-        if (BackendUtility::isTableWorkspaceEnabled($childTable)) {
+        $tcaSchemaFactory = GeneralUtility::makeInstance(TcaSchemaFactory::class);
+        if ($tcaSchemaFactory->has($childTable) && $tcaSchemaFactory->get($childTable)->isWorkspaceAware()) {
             $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(WorkspaceRestriction::class, $workspaceId));
         }
 
@@ -343,12 +342,24 @@ class InlineHelper
         return $elements;
     }
 
+    /**
+     * Replacement for PageRepository->enableFields(), which was removed in TYPO3 v14.
+     * Hidden records are respected according to the current context, the pid check is skipped.
+     */
+    protected function getEnableFieldsWhereClause(PageRepository $pageRepository, string $table): string
+    {
+        $constraints = $pageRepository->getDefaultConstraints($table, ['pid' => true]);
+        if ($constraints === []) {
+            return '';
+        }
+        $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table)
+            ->expr();
+        return ' AND ' . $expressionBuilder->and(...$constraints);
+    }
+
     protected function getPageRepository(): PageRepository
     {
-        $tsfe = $GLOBALS['TSFE'] ?? null;
-        if ($tsfe instanceof TypoScriptFrontendController && $tsfe->sys_page !== '') {
-            return $tsfe->sys_page;
-        }
         return GeneralUtility::makeInstance(PageRepository::class);
     }
 }

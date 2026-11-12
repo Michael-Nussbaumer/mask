@@ -20,7 +20,7 @@ jobs:
         with:
           php-version: 8.2
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -32,7 +32,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -63,20 +63,29 @@ jobs:
           - TYPO3: '13.4'
             php: '8.4'
             phpunit: '11'
+          - TYPO3: '14.3'
+            php: '8.2'
+            phpunit: '11'
+          - TYPO3: '14.3'
+            php: '8.3'
+            phpunit: '11'
+          - TYPO3: '14.3'
+            php: '8.4'
+            phpunit: '11'
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -98,14 +107,14 @@ jobs:
         with:
           php-version: 8.4
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}

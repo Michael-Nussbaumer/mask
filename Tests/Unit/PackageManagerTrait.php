@@ -35,6 +35,10 @@ trait PackageManagerTrait
         $packageManagerMock->method('resolvePackagePath')->willReturnCallback(function ($path) {
             return Environment::getProjectPath() . str_replace('EXT:mask', '', $path);
         });
+        // TYPO3 v14 resolves "EXT:" paths via the system resource API, which needs the package key.
+        $packageManagerMock->method('extractPackageKeyFromPackagePath')->willReturnCallback(
+            static fn(string $path): string => explode('/', substr($path, 4), 2)[0]
+        );
 
         ExtensionManagementUtility::setPackageManager($packageManagerMock);
     }

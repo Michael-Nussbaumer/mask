@@ -52,22 +52,17 @@ class TyposcriptCodeGenerator
     }
 
     /**
-     * Generates TSconfig and registers the icons for the content elements.
+     * Registers the icons for the content elements.
      */
-    public function generateTsConfig(): string
+    public function registerContentElementIcons(): void
     {
         if (!$this->tableDefinitionCollection->hasTable('tt_content')) {
-            return '';
+            return;
         }
 
-        // Register content elements and add them in new content element wizard.
-        $TSConfig = [];
-        $tt_content = $this->tableDefinitionCollection->getTable('tt_content');
-        foreach ($tt_content->elements as $element) {
-            // Register icons for contentelements
-            $iconIdentifier = 'mask-ce-' . $element->key;
+        foreach ($this->tableDefinitionCollection->getTable('tt_content')->elements as $element) {
             $this->iconRegistry->registerIcon(
-                $iconIdentifier,
+                'mask-ce-' . $element->key,
                 ContentElementIconProvider::class,
                 [
                     'key' => $element->key,
@@ -77,34 +72,14 @@ class TyposcriptCodeGenerator
                 ]
             );
 
-            if ($element->hidden) {
-                continue;
-            }
-
-            $cTypeKey = AffixUtility::addMaskCTypePrefix($element->key);
-            $wizard = [
-                'header' => 'LLL:EXT:mask/Resources/Private/Language/locallang_mask.xlf:new_content_element_tab',
-                'elements.' . $cTypeKey => [
-                    'iconIdentifier' => $iconIdentifier,
-                    'title' => $element->label,
-                    'description' => $element->description,
-                    'tt_content_defValues' => [
-                        'CType' => $cTypeKey,
-                    ],
-                    'saveAndClose' => $element->saveAndClose ? '1' : '0',
-                ],
-            ];
-
-            // Add overlay icon
             // @todo it is not possible right now to detect a custom overlay icon
             // @todo on localconf bootstrap (with FAL), as it loads the CacheManager
             // @todo which is not available that early. A better way would be to
             // @todo add a configuration for custom icons, instead of magically
             // @todo detect them by name.
             if ($element->iconOverlay !== '') {
-                $iconOverlayIdentifier = 'mask-ce-' . $element->key . '-overlay';
                 $this->iconRegistry->registerIcon(
-                    $iconOverlayIdentifier,
+                    'mask-ce-' . $element->key . '-overlay',
                     ContentElementIconProvider::class,
                     [
                         // @todo '_overlay' added to not conflict with the main icon.
@@ -115,7 +90,43 @@ class TyposcriptCodeGenerator
                         'color' => $element->colorOverlay,
                     ]
                 );
-                $wizard['elements.' . $cTypeKey]['iconOverlay'] = $iconOverlayIdentifier;
+            }
+        }
+    }
+
+    /**
+     * Generates TSconfig to add the content elements to the new content element wizard.
+     * The icons are registered separately in registerContentElementIcons().
+     */
+    public function generateTsConfig(): string
+    {
+        if (!$this->tableDefinitionCollection->hasTable('tt_content')) {
+            return '';
+        }
+
+        $TSConfig = [];
+        $tt_content = $this->tableDefinitionCollection->getTable('tt_content');
+        foreach ($tt_content->elements as $element) {
+            if ($element->hidden) {
+                continue;
+            }
+
+            $cTypeKey = AffixUtility::addMaskCTypePrefix($element->key);
+            $wizard = [
+                'header' => 'LLL:EXT:mask/Resources/Private/Language/locallang_mask.xlf:new_content_element_tab',
+                'elements.' . $cTypeKey => [
+                    'iconIdentifier' => 'mask-ce-' . $element->key,
+                    'title' => $element->label,
+                    'description' => $element->description,
+                    'tt_content_defValues' => [
+                        'CType' => $cTypeKey,
+                    ],
+                    'saveAndClose' => $element->saveAndClose ? '1' : '0',
+                ],
+            ];
+
+            if ($element->iconOverlay !== '') {
+                $wizard['elements.' . $cTypeKey]['iconOverlay'] = 'mask-ce-' . $element->key . '-overlay';
             }
 
             $TSConfig[] = '';

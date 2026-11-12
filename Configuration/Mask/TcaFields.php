@@ -425,6 +425,8 @@ return [
         ],
     ],
     'config.valuePicker.mode' => [
+        // The modes "append" and "prepend" were removed in TYPO3 v14.
+        'version' => '< 14',
         'type' => 'select',
         'label' => 'tx_mask.config.valuePicker.mode.label',
         'description' => 'tx_mask.config.valuePicker.mode.description',
