@@ -21,6 +21,7 @@ use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Loader\JsonSplitLoader;
 use MASK\Mask\Migrations\MigrationManager;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -36,9 +37,7 @@ class JsonSplitLoaderTest extends UnitTestCase
         GeneralUtility::rmdir(GeneralUtility::getFileAbsFileName('EXT:mask/var/ContentElements'), true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function load(): void
     {
         $this->registerPackageManager();
@@ -54,9 +53,7 @@ class JsonSplitLoaderTest extends UnitTestCase
         self::assertEquals($this->getExpectedConfigurationArray(), $jsonSplitLoader->load()->toArray(false));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function write(): void
     {
         $this->registerPackageManager();
@@ -1110,9 +1107,7 @@ class JsonSplitLoaderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function brokenConfigurationRaisesException(): void
     {
         $this->registerPackageManager();

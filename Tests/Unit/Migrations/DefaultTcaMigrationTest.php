@@ -21,6 +21,7 @@ use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Migrations\DefaultTcaMigration;
 use MASK\Mask\Tests\Unit\ConfigurationLoader\FakeConfigurationLoader;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class DefaultTcaMigrationTest extends UnitTestCase
@@ -28,9 +29,7 @@ class DefaultTcaMigrationTest extends UnitTestCase
     use PackageManagerTrait;
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function missingDefaults(): void
     {
         $this->registerPackageManager();

@@ -18,13 +18,12 @@ declare(strict_types=1);
 namespace MASK\Mask\Test\Utility;
 
 use MASK\Mask\Utility\AffixUtility;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class AffixUtilityTest extends BaseTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function maskPrefixSuffixTest(): void
     {
         self::assertSame('abc', AffixUtility::removeMaskPrefix('tx_mask_abc'));

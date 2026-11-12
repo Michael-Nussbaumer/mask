@@ -19,13 +19,12 @@ namespace MASK\Mask\Tests\Unit\Event;
 
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Event\MaskAfterElementDeletedEvent;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 final class MaskAfterElementDeletedEventTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function eventValuesSetCorrect(): void
     {
         $elementKey = 'mask_test_element';

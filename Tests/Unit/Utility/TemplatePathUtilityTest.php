@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit;
 
 use MASK\Mask\Utility\TemplatePathUtility;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -135,10 +137,8 @@ class TemplatePathUtilityTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getTemplatePathDataProvider
-     */
+    #[DataProvider('getTemplatePathDataProvider')]
+    #[Test]
     public function getTemplatePath(array $settings, string $elementKey, bool $onlyTemplateName, ?string $path, bool $removeExtension, string $expectedPath): void
     {
         $this->registerPackageManager();

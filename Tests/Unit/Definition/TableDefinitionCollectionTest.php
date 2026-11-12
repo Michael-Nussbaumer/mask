@@ -20,6 +20,8 @@ namespace MASK\Mask\Tests\Unit\Definition;
 use MASK\Mask\Definition\ElementTcaDefinition;
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Enumeration\FieldType;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class TableDefinitionCollectionTest extends BaseTestCase
@@ -372,10 +374,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider loadInlineFieldsDataProvider
-     * @test
-     */
+    #[DataProvider('loadInlineFieldsDataProvider')]
+    #[Test]
     public function loadInlineFields(array $json, string $parentKey, string $elementKey, array $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -834,10 +834,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider getElementsWhichUseFieldDataProvider
-     * @test
-     */
+    #[DataProvider('getElementsWhichUseFieldDataProvider')]
+    #[Test]
     public function getElementsWhichUseField(array $json, string $column, string $table, array $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -1568,10 +1566,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getFormTypeDataProvider
-     */
+    #[DataProvider('getFormTypeDataProvider')]
+    #[Test]
     public function getFormType(array $tca, array $json, string $fieldKey, string $table, FieldType $expected): void
     {
         $GLOBALS['TCA'] = $tca;
@@ -1720,10 +1716,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider findFirstNonEmptyLabelDataProvider
-     */
+    #[DataProvider('findFirstNonEmptyLabelDataProvider')]
+    #[Test]
     public function findFirstNonEmptyLabel(array $json, string $table, string $key, string $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -2012,10 +2006,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider loadElementDataProvider
-     */
+    #[DataProvider('loadElementDataProvider')]
+    #[Test]
     public function loadElement(array $json, string $table, string $element, array $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -2474,10 +2466,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider getLabelDataProvider
-     * @test
-     */
+    #[DataProvider('getLabelDataProvider')]
+    #[Test]
     public function getLabel(array $json, string $elementKey, string $fieldKey, string $type, string $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -2594,10 +2584,9 @@ class TableDefinitionCollectionTest extends BaseTestCase
     /**
      * Uses same code as getLabel internally.
      * We test here backwards compatibility.
-     *
-     * @dataProvider getDescriptionDataProvider
-     * @test
      */
+    #[DataProvider('getDescriptionDataProvider')]
+    #[Test]
     public function getDescription(array $json, string $elementKey, string $fieldKey, string $table, string $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -3161,10 +3150,8 @@ class TableDefinitionCollectionTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider getFieldTypeDataProvider
-     * @test
-     */
+    #[DataProvider('getFieldTypeDataProvider')]
+    #[Test]
     public function getFieldType(array $json, string $fieldKey, string $elementKey, bool $excludeInline, string $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);

@@ -18,13 +18,12 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit\Definition;
 
 use MASK\Mask\Definition\SqlColumnDefinition;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class SqlColumnDefinitionTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function setNullRemovedNotNullStatement(): void
     {
         $sqlColumnDefinition = new SqlColumnDefinition('tx_mask_field', 'varchar(255) DEFAULT \'\' NOT NULL');

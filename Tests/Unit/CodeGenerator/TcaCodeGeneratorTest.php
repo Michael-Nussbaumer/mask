@@ -20,6 +20,8 @@ namespace MASK\Mask\Tests\Unit\CodeGenerator;
 use MASK\Mask\CodeGenerator\TcaCodeGenerator;
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Tests\Unit\StorageRepositoryCreatorTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Resource\FileType;
 use TYPO3\CMS\Core\Resource\OnlineMedia\Helpers\OnlineMediaHelperRegistry;
@@ -254,10 +256,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getPageShowItemProvider
-     */
+    #[DataProvider('getPageShowItemProvider')]
+    #[Test]
     public function getPageShowItem(array $json, string $key, string $expected): void
     {
         $tcaCodeGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
@@ -465,10 +465,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider processTableTcaDataProvider
-     * @test
-     */
+    #[DataProvider('processTableTcaDataProvider')]
+    #[Test]
     public function processTableTca(string $table, array $json, array $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
@@ -839,10 +837,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider generateFieldsTcaDataProvider
-     * @test
-     */
+    #[DataProvider('generateFieldsTcaDataProvider')]
+    #[Test]
     public function generateFieldsTca(array $json, string $table, array $expected): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
@@ -1057,10 +1053,10 @@ final class TcaCodeGeneratorTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider generateFileTcaDataProvider
      * @param array<string, mixed> $expectedTypeFile
-     * @test
      */
+    #[DataProvider('generateFileTcaDataProvider')]
+    #[Test]
     public function generateFileTca(array $json, string $table, string $field, array $expected, array $expectedTypeFile): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
@@ -1481,10 +1477,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider setElementsTcaDataProvider
-     * @test
-     */
+    #[DataProvider('setElementsTcaDataProvider')]
+    #[Test]
     public function setElementsTca(array $json, string $key, string $showItemExpected, array $paletteExpected, bool $bodytextIsRichtext): void
     {
         $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] = [];
@@ -1646,10 +1640,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider generateTableTcaDataProvider
-     */
+    #[DataProvider('generateTableTcaDataProvider')]
+    #[Test]
     public function generateTableTca(array $json, string $table, string $expectedLabel, string $expectedIcon): void
     {
         $loader = $this->createLoader($json);
@@ -1754,10 +1746,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getPagePalettesTestDataProvider
-     */
+    #[DataProvider('getPagePalettesTestDataProvider')]
+    #[Test]
     public function getPagePalettesTest(array $json, string $elementKey, array $expected): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
@@ -1778,10 +1768,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider getFirstNoneTabFieldDataProvider
-     */
+    #[DataProvider('getFirstNoneTabFieldDataProvider')]
+    #[Test]
     public function getFirstNoneTabField(array $data, string $expected): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray([]), new OnlineMediaHelperRegistry());
@@ -2227,10 +2215,8 @@ final class TcaCodeGeneratorTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider generateTCAColumnsOverridesDataProvider
-     * @test
-     */
+    #[DataProvider('generateTCAColumnsOverridesDataProvider')]
+    #[Test]
     public function generateTCAColumnsOverrides(array $json, array $expected): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
@@ -2391,10 +2377,10 @@ final class TcaCodeGeneratorTest extends BaseTestCase
     }
 
     /**
-     * @test
-     * @dataProvider addSearchFieldsReturnsCorrectFieldStringDataProvider
      * @param mixed[] $json
      */
+    #[DataProvider('addSearchFieldsReturnsCorrectFieldStringDataProvider')]
+    #[Test]
     public function addSearchFieldsReturnsCorrectFieldString(array $json, string $table, string $currentTca, string $expected): void
     {
         $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = $currentTca;
@@ -2497,10 +2483,10 @@ final class TcaCodeGeneratorTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider extendBodytextSearchAndWhereReturnsCorrectConstraintDataProvider
-     * @test
      * @param mixed[] $json
      */
+    #[DataProvider('extendBodytextSearchAndWhereReturnsCorrectConstraintDataProvider')]
+    #[Test]
     public function extendBodytextSearchAndWhereReturnsCorrectConstraint(array $json, string $expected): void
     {
         $tcaGenerator = new TcaCodeGenerator(TableDefinitionCollection::createFromArray($json), new OnlineMediaHelperRegistry());
