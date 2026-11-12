@@ -95,7 +95,24 @@ jobs:
         run: composer require typo3/cms-core:^${{ matrix.TYPO3 }} phpunit/phpunit:^${{ matrix.phpunit }} --prefer-dist --no-progress
 
       - name: Unit
-        run: Build/Scripts/runTests.sh -s unit -p ${{ matrix.php }}
+        run: Build/Scripts/runTests.sh -s unit -p ${{ matrix.php }} -e "--log-junit=junit.xml"
+
+      - name: Annotate failed tests
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          seen = set()
+          for case in ET.parse('.Build/junit.xml').iter('testcase'):
+              for problem in list(case.findall('failure')) + list(case.findall('error')):
+                  message = (problem.text or problem.get('message') or '').strip()
+                  key = message.splitlines()[0] if message else case.get('name')
+                  if key in seen:
+                      continue
+                  seen.add(key)
+                  text = (case.get('class', '') + '::' + case.get('name', '') + ' ' + message)[:1500]
+                  print('::error title=' + problem.tag + '::' + text.replace('%', '%25').replace('\r', '').replace('\n', '%0A'))
+          PY
 
   PHPStan:
     name: PHPStan TYPO3 13.4 PHP 8.4
