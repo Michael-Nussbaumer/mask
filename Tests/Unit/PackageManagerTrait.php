@@ -26,20 +26,35 @@ trait PackageManagerTrait
 {
     public function registerPackageManager(): void
     {
-        $packageMock = $this->createMock(Package::class);
-        $packageMock->method('getPackagePath')->willReturn(realpath(__DIR__ . '/../../') . '/');
+        $maskPackageMock = $this->createMock(Package::class);
+        $maskPackageMock->method('getPackagePath')->willReturn(self::getMaskExtensionPath());
+        // Other extensions (e.g. a site package in a configured path) resolve to a path that does not exist.
+        $otherPackageMock = $this->createMock(Package::class);
+        $otherPackageMock->method('getPackagePath')->willReturn(Environment::getProjectPath() . '/non-existing-package/');
         $packageManagerMock = $this->createMock(PackageManager::class);
         $packageManagerMock->method('isPackageActive')->willReturn(true)->with('mask');
-        $packageManagerMock->method('getPackage')->willReturn($packageMock)->with('mask');
-        // @todo Replace workaround for resolvePackagePath.
-        $packageManagerMock->method('resolvePackagePath')->willReturnCallback(function ($path) {
-            return Environment::getProjectPath() . str_replace('EXT:mask', '', $path);
-        });
+        $packageManagerMock->method('getPackage')->willReturnCallback(
+            static fn(string $packageKey): Package => $packageKey === 'mask' ? $maskPackageMock : $otherPackageMock
+        );
+        // TYPO3 v13 resolves "EXT:" paths via PackageManager->resolvePackagePath().
+        $packageManagerMock->method('resolvePackagePath')->willReturnCallback(
+            static fn(string $path): string => str_starts_with($path, 'EXT:mask/')
+                ? self::getMaskExtensionPath() . substr($path, 9)
+                : Environment::getProjectPath() . $path
+        );
         // TYPO3 v14 resolves "EXT:" paths via the system resource API, which needs the package key.
         $packageManagerMock->method('extractPackageKeyFromPackagePath')->willReturnCallback(
             static fn(string $path): string => explode('/', substr($path, 4), 2)[0]
         );
-
         ExtensionManagementUtility::setPackageManager($packageManagerMock);
+    }
+
+    /**
+     * Absolute path of the extension with a trailing slash.
+     * Can be used without a registered package manager, e.g. in tearDown().
+     */
+    public static function getMaskExtensionPath(): string
+    {
+        return realpath(__DIR__ . '/../../') . '/';
     }
 }

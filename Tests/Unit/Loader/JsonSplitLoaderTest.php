@@ -34,7 +34,7 @@ class JsonSplitLoaderTest extends UnitTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        GeneralUtility::rmdir(GeneralUtility::getFileAbsFileName('EXT:mask/var/ContentElements'), true);
+        GeneralUtility::rmdir(self::getMaskExtensionPath() . 'var/ContentElements', true);
     }
 
     #[Test]

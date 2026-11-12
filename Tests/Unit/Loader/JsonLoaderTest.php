@@ -34,7 +34,7 @@ class JsonLoaderTest extends UnitTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        GeneralUtility::rmdir(GeneralUtility::getFileAbsFileName('EXT:mask/var/mask.json'));
+        GeneralUtility::rmdir(self::getMaskExtensionPath() . 'var/mask.json');
     }
 
     #[Test]
