@@ -1,10 +1,9 @@
 <?php
 
 use MASK\Mask\Enumeration\Tab;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 $validation = [
-    (new Typo3Version())->getMajorVersion() > 11 ? 'config.required' : 'config.eval.required' => 6,
+    'config.required' => 6,
 ];
 
 return [

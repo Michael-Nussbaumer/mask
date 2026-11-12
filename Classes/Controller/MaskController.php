@@ -21,7 +21,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Page\PageRenderer;
 
 /**
@@ -51,10 +50,6 @@ class MaskController
         $moduleTemplate->assign('iconSize', 'medium');
         $this->pageRenderer->loadJavaScriptModule('@mask/mask');
         $this->pageRenderer->addCssFile('EXT:mask/Resources/Public/Styles/mask.css');
-        if ((new Typo3Version())->getMajorVersion() === 12) {
-            // No support for dark-mode in v12
-            $this->pageRenderer->addCssFile('EXT:mask/Resources/Public/Styles/disable-dark-mode.css');
-        }
         return $moduleTemplate->renderResponse('Wizard/Main');
     }
 }
