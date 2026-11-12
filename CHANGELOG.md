@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Continued as a community fork: `michael-nussbaumer/mask` (replaces `mask/mask`, extension key `mask` unchanged).
+
 ### Added
 - Support for TYPO3 v14.3
 - Page TSconfig is added via `BeforeLoadedPageTsConfigEvent`

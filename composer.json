@@ -1,12 +1,12 @@
 {
-	"name": "mask/mask",
+	"name": "michael-nussbaumer/mask",
 	"type": "typo3-cms-extension",
 	"description": "Mask - Create your own content elements and page templates. Easy to use, even without programming skills because of the comfortable drag and drop user interface. Stored in structured database tables. Style your frontend with Fluid tags. Ideal, if you want to switch from Templavoila.",
-	"homepage": "https://extensions.typo3.org/extension/mask",
+	"homepage": "https://github.com/Michael-Nussbaumer/mask",
 	"support": {
-		"source": "https://github.com/gernott/mask",
-		"docs": "https://docs.typo3.org/p/mask/mask/main/en-us/",
-		"issues": "https://github.com/gernott/mask/issues/",
+		"source": "https://github.com/Michael-Nussbaumer/mask",
+		"docs": "https://github.com/Michael-Nussbaumer/mask/tree/main/Documentation",
+		"issues": "https://github.com/Michael-Nussbaumer/mask/issues",
 		"chat": "https://typo3.slack.com/archives/C0FD5F6P2"
 	},
 	"funding": [
@@ -37,6 +37,11 @@
 			"email": "info@nikita-hovratov.de",
 			"role": "Developer",
 			"homepage": "https://www.nikita-hovratov.de"
+		},
+		{
+			"name": "Michael Nussbaumer",
+			"role": "Maintainer",
+			"homepage": "https://github.com/Michael-Nussbaumer"
 		}
 	],
 	"license": "GPL-2.0-or-later",
@@ -75,7 +80,8 @@
 		"gridelementsteam/gridelements": "Allows creating container elements to place your Mask elements into."
 	},
 	"replace": {
-		"typo3-ter/mask": "self.version"
+		"typo3-ter/mask": "self.version",
+		"mask/mask": "self.version"
 	},
 	"autoload": {
 		"psr-4": {
