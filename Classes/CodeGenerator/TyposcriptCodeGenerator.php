@@ -21,11 +21,9 @@ use MASK\Mask\Definition\ElementDefinition;
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Definition\TcaFieldDefinition;
 use MASK\Mask\Enumeration\FieldType;
-use MASK\Mask\Imaging\IconProvider\ContentElementIconProvider;
 use MASK\Mask\Utility\AffixUtility;
 use MASK\Mask\Utility\ArrayToTypoScriptConverter;
 use MASK\Mask\Utility\TemplatePathUtility;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
@@ -39,64 +37,18 @@ class TyposcriptCodeGenerator
      */
     protected array $maskExtensionConfiguration;
     protected TableDefinitionCollection $tableDefinitionCollection;
-    protected IconRegistry $iconRegistry;
 
     public function __construct(
         TableDefinitionCollection $tableDefinitionCollection,
-        array $maskExtensionConfiguration,
-        IconRegistry $iconRegistry
+        array $maskExtensionConfiguration
     ) {
         $this->tableDefinitionCollection = $tableDefinitionCollection;
         $this->maskExtensionConfiguration = $maskExtensionConfiguration;
-        $this->iconRegistry = $iconRegistry;
-    }
-
-    /**
-     * Registers the icons for the content elements.
-     */
-    public function registerContentElementIcons(): void
-    {
-        if (!$this->tableDefinitionCollection->hasTable('tt_content')) {
-            return;
-        }
-
-        foreach ($this->tableDefinitionCollection->getTable('tt_content')->elements as $element) {
-            $this->iconRegistry->registerIcon(
-                'mask-ce-' . $element->key,
-                ContentElementIconProvider::class,
-                [
-                    'key' => $element->key,
-                    'label' => $element->label,
-                    'icon' => $element->icon,
-                    'color' => $element->color,
-                ]
-            );
-
-            // @todo it is not possible right now to detect a custom overlay icon
-            // @todo on localconf bootstrap (with FAL), as it loads the CacheManager
-            // @todo which is not available that early. A better way would be to
-            // @todo add a configuration for custom icons, instead of magically
-            // @todo detect them by name.
-            if ($element->iconOverlay !== '') {
-                $this->iconRegistry->registerIcon(
-                    'mask-ce-' . $element->key . '-overlay',
-                    ContentElementIconProvider::class,
-                    [
-                        // @todo '_overlay' added to not conflict with the main icon.
-                        // @todo will only work right now, if a FontAwesome icon is selected. See comment above.
-                        'key' => $element->key . '_overlay',
-                        'label' => $element->label,
-                        'icon' => $element->iconOverlay,
-                        'color' => $element->colorOverlay,
-                    ]
-                );
-            }
-        }
     }
 
     /**
      * Generates TSconfig to add the content elements to the new content element wizard.
-     * The icons are registered separately in registerContentElementIcons().
+     * The icons are registered separately in \MASK\Mask\EventListeners\RegisterIcons.
      */
     public function generateTsConfig(): string
     {

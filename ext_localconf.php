@@ -29,6 +29,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['overrideSharedFields'] ??= (bool
     // Add all the typoscript we need in the correct files
     $typoScriptCodeGenerator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(MASK\Mask\CodeGenerator\TyposcriptCodeGenerator::class);
     // Page TSconfig is added by \MASK\Mask\EventListeners\AddPageTsConfig.
-    $typoScriptCodeGenerator->registerContentElementIcons();
+    // Content element icons are registered by \MASK\Mask\EventListeners\RegisterIcons.
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup($typoScriptCodeGenerator->generateSetupTyposcript());
 })();
