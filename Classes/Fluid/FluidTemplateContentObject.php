@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace MASK\Mask\Fluid;
 
 use MASK\Mask\Helper\InlineHelper;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FluidTemplateContentObject extends \TYPO3\CMS\Frontend\ContentObject\FluidTemplateContentObject
@@ -38,9 +39,27 @@ class FluidTemplateContentObject extends \TYPO3\CMS\Frontend\ContentObject\Fluid
             $inlineHelper->addIrreToData($data, 'pages', '', 'pages');
             $variables['data'] = $data;
         } elseif (!array_key_exists('parentRecord', $variables)) {
-            $variables['parentRecord'] = $this->cObj->parentRecord['data'] ?? [];
+            $variables['parentRecord'] = $this->getParentRecordData();
         }
 
         return $variables;
+    }
+
+    /**
+     * TYPO3 v14 made ContentObjectRenderer->parentRecord protected without adding a getter.
+     * The only remaining access is the (internal) state array.
+     *
+     * @todo Replace with a public API, once TYPO3 provides one.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getParentRecordData(): array
+    {
+        if ((new Typo3Version())->getMajorVersion() < 14) {
+            return $this->cObj->parentRecord['data'] ?? [];
+        }
+        // @phpstan-ignore-next-line getState() only exists in TYPO3 v14+
+        $data = $this->cObj->getState()['parentRecord']['data'] ?? [];
+        return is_array($data) ? $data : [];
     }
 }

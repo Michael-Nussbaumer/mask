@@ -21,6 +21,8 @@ use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Domain\Repository\BackendLayoutRepository;
 use MASK\Mask\Helper\InlineHelper;
 use MASK\Mask\Tests\Unit\StorageRepositoryCreatorTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -95,10 +97,8 @@ class InlineHelperTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider addFilesToDataDataProvider
-     * @test
-     */
+    #[DataProvider('addFilesToDataDataProvider')]
+    #[Test]
     public function addFilesToData(array $json, string $key, array $data, string $table): void
     {
         $GLOBALS['TCA']['tt_content']['columns'] = [
@@ -264,10 +264,10 @@ class InlineHelperTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider addIrreToData_tt_contentDataProvider
-     * @test
      * @todo refactor to functional test
      */
+    #[DataProvider('addIrreToData_tt_contentDataProvider')]
+    #[Test]
     public function addIrreToData_tt_content(array $json, string $key, array $data, string $table, array $inlineElements): void
     {
         $backendLayoutRepositoryMock = $this->createMock(BackendLayoutRepository::class);
@@ -341,10 +341,8 @@ class InlineHelperTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider addIrreToData_pagesDataProvider
-     * @test
-     */
+    #[DataProvider('addIrreToData_pagesDataProvider')]
+    #[Test]
     public function addIrreToData_pages(array $json, string $key, array $data, string $table, array $inlineElements): void
     {
         $backendLayoutRepository = $this->getMockBuilder(BackendLayoutRepository::class)
@@ -422,10 +420,8 @@ class InlineHelperTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider addIrreToDataNoBeLayoutDataProvider
-     * @test
-     */
+    #[DataProvider('addIrreToDataNoBeLayoutDataProvider')]
+    #[Test]
     public function addIrreToDataNoBeLayout(array $json, string $key, array $data, string $table, array $inlineElements): void
     {
         $backendLayoutRepositoryMock = $this->createMock(BackendLayoutRepository::class);
@@ -502,9 +498,9 @@ class InlineHelperTest extends BaseTestCase
     }
 
     /**
-     * @dataProvider addIrreToDataToInlineFieldDataProvider
      * @todo This needs to be refactored to a functional test. Otherwise recursive `addIrreToData` call can't be tested.
      */
+    #[DataProvider('addIrreToDataToInlineFieldDataProvider')]
     public function addIrreToDataToInlineField(array $json, string $key, array $data, string $table, array $inlineElements): void
     {
         $backendLayoutRepositoryMock = $this->createMock(BackendLayoutRepository::class);

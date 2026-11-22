@@ -1,7 +1,6 @@
 <?php
 
 use MASK\Mask\Enumeration\Tab;
-use TYPO3\CMS\Core\Information\Typo3Version;
 
 return [
     Tab::GENERAL->value => [
@@ -29,7 +28,7 @@ return [
     ],
     Tab::EXTENDED->value => [
         [
-            (new Typo3Version())->getMajorVersion() > 11 ? 'config.nullable' : 'config.eval.null' => 6,
+            'config.nullable' => 6,
             'config.mode' => 6,
         ],
     ],

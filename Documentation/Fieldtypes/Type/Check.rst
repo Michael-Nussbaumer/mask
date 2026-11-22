@@ -7,7 +7,7 @@ Check
 
 .. figure:: ../../Images/FieldTypes/Check.svg
    :alt: Check
-   :class: float-left
+   :align: left
    :width: 64px
 
 One or more checkboxes.

@@ -7,7 +7,7 @@ Selectbox
 
 .. figure:: ../../Images/FieldTypes/Select.svg
    :alt: Select
-   :class: float-left
+   :align: left
    :width: 64px
 
 Selectbox with own values or relation to other database table.

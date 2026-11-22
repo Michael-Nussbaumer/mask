@@ -28,26 +28,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['overrideSharedFields'] ??= (bool
 (static function () {
     // Add all the typoscript we need in the correct files
     $typoScriptCodeGenerator = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(MASK\Mask\CodeGenerator\TyposcriptCodeGenerator::class);
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig($typoScriptCodeGenerator->generateTsConfig());
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig($typoScriptCodeGenerator->generatePageTSConfigOverridesForBackendLayouts());
+    // Page TSconfig is added by \MASK\Mask\EventListeners\AddPageTsConfig.
+    // Content element icons are registered by \MASK\Mask\EventListeners\RegisterIcons.
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup($typoScriptCodeGenerator->generateSetupTyposcript());
-
-    // addRootLineFields are removed in TYPO3 v13 and are always resolved.
-    if ((new \TYPO3\CMS\Core\Information\Typo3Version())->getMajorVersion() < 13) {
-        /** @var \MASK\Mask\Definition\TableDefinitionCollection $tables */
-        $tables = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\MASK\Mask\Loader\LoaderRegistry::class)->loadActiveDefinition();
-        if ($tables->hasTable('pages')) {
-            $rootlineFields = [];
-            if ($GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] !== '') {
-                $rootlineFields = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields']);
-            }
-            foreach ($tables->getTable('pages')->tca as $field) {
-                if ($field->hasFieldType() && !$field->getFieldType()->isGroupingField()) {
-                    // Add addRootLineFields for all page fields
-                    $rootlineFields[] = $field->fullKey;
-                }
-            }
-            $GLOBALS['TYPO3_CONF_VARS']['FE']['addRootLineFields'] = implode(',', $rootlineFields);
-        }
-    }
 })();

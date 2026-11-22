@@ -19,6 +19,8 @@ namespace MASK\Mask\Tests\Unit\Domain\Repository;
 
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
 use MASK\Mask\Tests\Unit\StorageRepositoryCreatorTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class StorageRepositoryTest extends BaseTestCase
@@ -1219,10 +1221,8 @@ class StorageRepositoryTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider addDataProvider
-     * @test
-     */
+    #[DataProvider('addDataProvider')]
+    #[Test]
     public function add(array $json, array $element, array $fields, string $table, array $expected, bool $isNew): void
     {
         $storageRepository = $this->createStorageRepository($json, false);
@@ -1631,10 +1631,8 @@ class StorageRepositoryTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider removeDataProvider
-     */
+    #[DataProvider('removeDataProvider')]
+    #[Test]
     public function remove(array $json, string $table, string $elementKey, array $expected): void
     {
         $GLOBALS['TCA']['tt_content']['columns']['header']['config']['type'] = 'input';
@@ -2824,10 +2822,8 @@ class StorageRepositoryTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider addDataReusingProvider
-     * @test
-     */
+    #[DataProvider('addDataReusingProvider')]
+    #[Test]
     public function addReusing(array $json, array $element, array $fields, string $table, array $expected, bool $isNew): void
     {
         $storageRepository = $this->createStorageRepository($json, true);

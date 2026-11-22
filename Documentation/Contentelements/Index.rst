@@ -115,7 +115,8 @@ defined a label and a key in the creation wizard, they will be shown here.
 
 .. image:: ../Images/ContentelementsManual/ElementMetaData.png
    :alt: Element Meta Data tab
-   :class: with-border float-left
+   :class: with-border
+   :align: left
 
 Besides the label and the key there are some further fields:
 

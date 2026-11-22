@@ -25,7 +25,8 @@ use MASK\Mask\Definition\TcaFieldDefinition;
 use MASK\Mask\Enumeration\FieldType;
 use MASK\Mask\Utility\AffixUtility;
 use MASK\Mask\Utility\DateUtility;
-use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Resource\FileType;
 use TYPO3\CMS\Core\Resource\OnlineMedia\Helpers\OnlineMediaHelperRegistry;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -122,7 +123,9 @@ class TcaCodeGenerator
             $tableTca['ctrl']['iconfile'] = $field->inlineIcon;
         }
 
-        $tableTca['ctrl']['searchFields'] = $this->addSearchFields($table);
+        if (self::usesSearchFieldsOption()) {
+            $tableTca['ctrl']['searchFields'] = $this->addSearchFields($table);
+        }
 
         return $tableTca;
     }
@@ -136,9 +139,9 @@ class TcaCodeGenerator
             return;
         }
 
-        $defaultTabs = ',--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.appearanceLinks;appearanceLinks,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,--palette--;;language,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,--palette--;;hidden,--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,--div--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.tabs.category,categories,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:notes,rowDescription,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended';
+        $defaultTabs = ',--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,--palette--;;frames,--palette--;;appearanceLinks,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,--palette--;;language,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,--palette--;;hidden,--palette--;;access,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,--div--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.tabs.category,categories,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:notes,rowDescription,--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended';
         $prependTabs = '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,';
-        $defaultPalette = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,';
+        $defaultPalette = '--palette--;;general,';
 
         // Add gridelements fields, to make mask work with gridelements out of the box
         $gridelements = '';
@@ -395,27 +398,27 @@ class TcaCodeGenerator
                                 --palette--;;imageoverlayPalette,
                                 --palette--;;filePalette',
                         ],
-                        File::FILETYPE_TEXT => [
+                        FileType::TEXT->value => [
                             'showitem' => '
                                 --palette--;;imageoverlayPalette,
                                 --palette--;;filePalette',
                         ],
-                        File::FILETYPE_IMAGE => [
+                        FileType::IMAGE->value => [
                             'showitem' => '
                                 --palette--;;imageoverlayPalette,
                                 --palette--;;filePalette',
                         ],
-                        File::FILETYPE_AUDIO => [
+                        FileType::AUDIO->value => [
                             'showitem' => '
                                 --palette--;;audioOverlayPalette,
                                 --palette--;;filePalette',
                         ],
-                        File::FILETYPE_VIDEO => [
+                        FileType::VIDEO->value => [
                             'showitem' => '
                                 --palette--;;videoOverlayPalette,
                                 --palette--;;filePalette',
                         ],
-                        File::FILETYPE_APPLICATION => [
+                        FileType::APPLICATION->value => [
                             'showitem' => '
                                 --palette--;;imageoverlayPalette,
                                 --palette--;;filePalette',
@@ -635,6 +638,28 @@ class TcaCodeGenerator
     }
 
     /**
+     * Sets ctrl.searchFields for the given table in TYPO3 v13.
+     *
+     * TYPO3 v14 removed this option and treats all suitable fields as searchable by default.
+     * Setting it anyway would make the TCA migration mark every core field missing in the
+     * list (e.g. header, bodytext) as not searchable.
+     */
+    public function applySearchFields(string $table): void
+    {
+        if (self::usesSearchFieldsOption()) {
+            $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = $this->addSearchFields($table);
+        }
+    }
+
+    /**
+     * @todo Remove when TYPO3 v13 support is dropped.
+     */
+    protected static function usesSearchFieldsOption(): bool
+    {
+        return (new Typo3Version())->getMajorVersion() < 14;
+    }
+
+    /**
      * Add search fields to find mask elements or pages
      */
     public function addSearchFields(string $table): string
@@ -704,9 +729,34 @@ class TcaCodeGenerator
 
     protected static function getTcaTemplate(): array
     {
+        // TYPO3 v14 moved these labels to new language domains and deprecated the old ones.
+        // @todo Keep only the TYPO3 v14 labels, when TYPO3 v13 support is dropped.
+        $labels = (new Typo3Version())->getMajorVersion() >= 14
+            ? [
+                'starttime' => 'core.db.general:starttime',
+                'endtime' => 'core.db.general:endtime',
+                'l18n_parent' => 'core.db.general:l18n_parent',
+                'fe_group' => 'core.db.general:fe_group',
+                'hide_at_login' => 'core.db.general:fe_group.hide_at_login',
+                'any_login' => 'core.db.general:fe_group.any_login',
+                'usergroups' => 'core.db.general:fe_group.usergroups',
+                'palette_hidden' => 'core.form.palettes:visibility',
+                'palette_access' => 'core.form.palettes:access',
+            ]
+            : [
+                'starttime' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+                'endtime' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
+                'l18n_parent' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
+                'fe_group' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
+                'hide_at_login' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login',
+                'any_login' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login',
+                'usergroups' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups',
+                'palette_hidden' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.visibility',
+                'palette_access' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access',
+            ];
         $starttime = [
             'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+            'label' => $labels['starttime'],
             'config' => [
                 'type' => 'datetime',
                 'default' => 0,
@@ -716,7 +766,7 @@ class TcaCodeGenerator
         ];
         $endtime = [
             'exclude' => true,
-            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
+            'label' => $labels['endtime'],
             'config' => [
                 'type' => 'datetime',
                 'default' => 0,
@@ -758,11 +808,11 @@ class TcaCodeGenerator
                     ',
                 ],
                 'hidden' => [
-                    'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.palettes.visibility',
+                    'label' => $labels['palette_hidden'],
                     'showitem' => 'hidden',
                 ],
                 'access' => [
-                    'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access',
+                    'label' => $labels['palette_access'],
                     'showitem' => '
                         starttime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel,
                         endtime;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel,
@@ -796,7 +846,7 @@ class TcaCodeGenerator
                 ],
                 'l10n_parent' => [
                     'displayCond' => 'FIELD:sys_language_uid:>:0',
-                    'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
+                    'label' => $labels['l18n_parent'],
                     'config' => [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
@@ -832,7 +882,7 @@ class TcaCodeGenerator
                 'endtime' => $endtime,
                 'fe_group' => [
                     'exclude' => true,
-                    'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
+                    'label' => $labels['fe_group'],
                     'config' => [
                         'type' => 'select',
                         'renderType' => 'selectMultipleSideBySide',
@@ -840,15 +890,15 @@ class TcaCodeGenerator
                         'maxitems' => 20,
                         'items' => [
                             [
-                                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login',
+                                'label' => $labels['hide_at_login'],
                                 'value' => -1,
                             ],
                             [
-                                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login',
+                                'label' => $labels['any_login'],
                                 'value' => -2,
                             ],
                             [
-                                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups',
+                                'label' => $labels['usergroups'],
                                 'value' => '--div--',
                             ],
                         ],

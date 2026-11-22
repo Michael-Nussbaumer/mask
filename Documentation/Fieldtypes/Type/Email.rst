@@ -12,7 +12,7 @@ Email
 
 .. figure:: ../../Images/FieldTypes/Email.svg
    :alt: Email
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field validated for a correct email address.

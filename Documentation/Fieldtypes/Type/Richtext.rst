@@ -7,7 +7,7 @@ Richtext
 
 .. figure:: ../../Images/FieldTypes/Richtext.svg
    :alt: Richtext
-   :class: float-left
+   :align: left
    :width: 64px
 
 A multiline textfield with richtext editor.

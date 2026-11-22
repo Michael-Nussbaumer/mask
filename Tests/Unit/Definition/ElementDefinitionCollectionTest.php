@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit\Definition;
 
 use MASK\Mask\Definition\ElementDefinitionCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class ElementDefinitionCollectionTest extends UnitTestCase
@@ -214,10 +216,8 @@ class ElementDefinitionCollectionTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider elementsAreSortedBySortingDataProvider
-     * @test
-     */
+    #[DataProvider('elementsAreSortedBySortingDataProvider')]
+    #[Test]
     public function elementsAreSortedBySorting(array $json, array $expected): void
     {
         $elements = [];

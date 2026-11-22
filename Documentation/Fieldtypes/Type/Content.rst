@@ -7,7 +7,7 @@ Content
 
 .. figure:: ../../Images/FieldTypes/Content.svg
    :alt: Content
-   :class: float-left
+   :align: left
    :width: 64px
 
 Allow users to attach content elements to the content element itself. This way editors can nest the content elements and

@@ -19,6 +19,8 @@ namespace MASK\Mask\Test\Utility;
 
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Utility\OverrideFieldsUtility;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class OverrideFieldsUtilityTest extends BaseTestCase
@@ -387,10 +389,8 @@ class OverrideFieldsUtilityTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider restructuringFieldsWorksDataProvider
-     */
+    #[DataProvider('restructuringFieldsWorksDataProvider')]
+    #[Test]
     public function restructuringFieldsWorks(array $json, array $expected): void
     {
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);

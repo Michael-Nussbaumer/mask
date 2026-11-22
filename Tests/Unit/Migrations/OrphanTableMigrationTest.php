@@ -21,6 +21,7 @@ use MASK\Mask\Loader\JsonLoader;
 use MASK\Mask\Migrations\MigrationManager;
 use MASK\Mask\Migrations\OrphanRemoverMigration;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -30,9 +31,7 @@ class OrphanTableMigrationTest extends UnitTestCase
 
     protected bool $resetSingletonInstances = true;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function orphanTablesRemoved(): void
     {
         $this->registerPackageManager();

@@ -7,7 +7,7 @@ Linebreak
 
 .. figure:: ../../Images/FieldTypes/Linebreak.svg
    :alt: Linebreak
-   :class: float-left
+   :align: left
    :width: 64px
 
 For use in conjunction with :ref:`Palettes <fields-palette>` only. They allow you to add a linebreak between two fields in a palette, if there

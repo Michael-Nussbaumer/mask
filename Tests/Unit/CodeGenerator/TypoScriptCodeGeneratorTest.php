@@ -20,7 +20,8 @@ namespace MASK\Mask\Tests\Unit\CodeGenerator;
 use MASK\Mask\CodeGenerator\TyposcriptCodeGenerator;
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class TypoScriptCodeGeneratorTest extends UnitTestCase
@@ -113,15 +114,12 @@ tt_content.mask_element1 {
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider generateSetupTyposcriptDataProvider
-     */
+    #[DataProvider('generateSetupTyposcriptDataProvider')]
+    #[Test]
     public function generateSetupTyposcript(array $json, array $configuration, string $expected): void
     {
-        $iconRegistryMock = $this->createMock(IconRegistry::class);
         $tableDefinitionCollection = TableDefinitionCollection::createFromArray($json);
-        $typoScriptCodeGenerator = new TyposcriptCodeGenerator($tableDefinitionCollection, $configuration, $iconRegistryMock);
+        $typoScriptCodeGenerator = new TyposcriptCodeGenerator($tableDefinitionCollection, $configuration);
         self::assertSame($expected, $typoScriptCodeGenerator->generateSetupTyposcript());
     }
 }

@@ -136,6 +136,12 @@ services:
         description: 'Migrates shared fields to override fields.'
         schedulable: false
 
+  MASK\Mask\EventListeners\AddPageTsConfig:
+    tags:
+      - name: event.listener
+        identifier: 'mask-page-tsconfig'
+        event: TYPO3\CMS\Core\TypoScript\IncludeTree\Event\BeforeLoadedPageTsConfigEvent
+
   MASK\Mask\EventListeners\RegisterIcons:
     public: true
     tags:

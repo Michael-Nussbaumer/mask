@@ -21,11 +21,9 @@ use MASK\Mask\Definition\ElementDefinition;
 use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Definition\TcaFieldDefinition;
 use MASK\Mask\Enumeration\FieldType;
-use MASK\Mask\Imaging\IconProvider\ContentElementIconProvider;
 use MASK\Mask\Utility\AffixUtility;
 use MASK\Mask\Utility\ArrayToTypoScriptConverter;
 use MASK\Mask\Utility\TemplatePathUtility;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
@@ -39,20 +37,18 @@ class TyposcriptCodeGenerator
      */
     protected array $maskExtensionConfiguration;
     protected TableDefinitionCollection $tableDefinitionCollection;
-    protected IconRegistry $iconRegistry;
 
     public function __construct(
         TableDefinitionCollection $tableDefinitionCollection,
-        array $maskExtensionConfiguration,
-        IconRegistry $iconRegistry
+        array $maskExtensionConfiguration
     ) {
         $this->tableDefinitionCollection = $tableDefinitionCollection;
         $this->maskExtensionConfiguration = $maskExtensionConfiguration;
-        $this->iconRegistry = $iconRegistry;
     }
 
     /**
-     * Generates TSconfig and registers the icons for the content elements.
+     * Generates TSconfig to add the content elements to the new content element wizard.
+     * The icons are registered separately in \MASK\Mask\EventListeners\RegisterIcons.
      */
     public function generateTsConfig(): string
     {
@@ -60,23 +56,9 @@ class TyposcriptCodeGenerator
             return '';
         }
 
-        // Register content elements and add them in new content element wizard.
         $TSConfig = [];
         $tt_content = $this->tableDefinitionCollection->getTable('tt_content');
         foreach ($tt_content->elements as $element) {
-            // Register icons for contentelements
-            $iconIdentifier = 'mask-ce-' . $element->key;
-            $this->iconRegistry->registerIcon(
-                $iconIdentifier,
-                ContentElementIconProvider::class,
-                [
-                    'key' => $element->key,
-                    'label' => $element->label,
-                    'icon' => $element->icon,
-                    'color' => $element->color,
-                ]
-            );
-
             if ($element->hidden) {
                 continue;
             }
@@ -85,7 +67,7 @@ class TyposcriptCodeGenerator
             $wizard = [
                 'header' => 'LLL:EXT:mask/Resources/Private/Language/locallang_mask.xlf:new_content_element_tab',
                 'elements.' . $cTypeKey => [
-                    'iconIdentifier' => $iconIdentifier,
+                    'iconIdentifier' => 'mask-ce-' . $element->key,
                     'title' => $element->label,
                     'description' => $element->description,
                     'tt_content_defValues' => [
@@ -95,27 +77,8 @@ class TyposcriptCodeGenerator
                 ],
             ];
 
-            // Add overlay icon
-            // @todo it is not possible right now to detect a custom overlay icon
-            // @todo on localconf bootstrap (with FAL), as it loads the CacheManager
-            // @todo which is not available that early. A better way would be to
-            // @todo add a configuration for custom icons, instead of magically
-            // @todo detect them by name.
             if ($element->iconOverlay !== '') {
-                $iconOverlayIdentifier = 'mask-ce-' . $element->key . '-overlay';
-                $this->iconRegistry->registerIcon(
-                    $iconOverlayIdentifier,
-                    ContentElementIconProvider::class,
-                    [
-                        // @todo '_overlay' added to not conflict with the main icon.
-                        // @todo will only work right now, if a FontAwesome icon is selected. See comment above.
-                        'key' => $element->key . '_overlay',
-                        'label' => $element->label,
-                        'icon' => $element->iconOverlay,
-                        'color' => $element->colorOverlay,
-                    ]
-                );
-                $wizard['elements.' . $cTypeKey]['iconOverlay'] = $iconOverlayIdentifier;
+                $wizard['elements.' . $cTypeKey]['iconOverlay'] = 'mask-ce-' . $element->key . '-overlay';
             }
 
             $TSConfig[] = '';

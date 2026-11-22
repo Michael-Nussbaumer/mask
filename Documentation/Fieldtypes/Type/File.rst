@@ -7,7 +7,7 @@ File
 
 .. figure:: ../../Images/FieldTypes/File.svg
    :alt: File
-   :class: float-left
+   :align: left
    :width: 64px
 
 File field using :ref:`FAL<t3coreapi:using-fal>`.

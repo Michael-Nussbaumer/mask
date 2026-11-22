@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit\Definition;
 
 use MASK\Mask\Definition\ArrayDefinitionSorter;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class ArrayDefinitionSorterTest extends UnitTestCase
@@ -103,11 +105,11 @@ class ArrayDefinitionSorterTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider arrayIsSortedByKeysDataProvider
-     * @test
      * @param array<string|int, mixed> $array
      * @param array<string|int, mixed> $expected
      */
+    #[DataProvider('arrayIsSortedByKeysDataProvider')]
+    #[Test]
     public function arrayIsSortedByKeys(array $array, array $expected): void
     {
         $arrayDefinitionSorter = new ArrayDefinitionSorter();
@@ -166,12 +168,12 @@ class ArrayDefinitionSorterTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider excludedKeysAreNotSortedDataProvider
-     * @test
      * @param array<string|int, mixed> $array
      * @param array<string|int, mixed> $expected
      * @param array<string> $excludedKeys
      */
+    #[DataProvider('excludedKeysAreNotSortedDataProvider')]
+    #[Test]
     public function excludedKeysAreNotSorted(array $array, array $expected, array $excludedKeys): void
     {
         $arrayDefinitionSorter = new ArrayDefinitionSorter();

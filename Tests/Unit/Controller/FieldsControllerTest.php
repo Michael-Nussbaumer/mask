@@ -22,6 +22,8 @@ use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Tests\Unit\ConfigurationLoader\FakeConfigurationLoader;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
 use MASK\Mask\Tests\Unit\StorageRepositoryCreatorTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -995,10 +997,8 @@ class FieldsControllerTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider loadElementDataProvider
-     */
+    #[DataProvider('loadElementDataProvider')]
+    #[Test]
     public function loadElement(array $json, string $table, string $elementKey, array $expected): void
     {
         $GLOBALS['TCA']['tt_content']['columns']['header'] = [

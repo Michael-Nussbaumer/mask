@@ -1,18 +1,28 @@
-# ⚠️ Attention: Deprecation of Mask ⚠️
+# Mask – community fork with TYPO3 v14 support
 
-Since TYPO3 v13 the Mask extension is deprecated. This extension will only receive bugfixes until regular maintenance for TYPO3 v13 has ended (30 April 2026).
-There are no official plans to make this extension work with the upcoming TYPO3 v14 version (Please reach out to us, if you want to make it compatible).
-We highly recommend to [migrate to TYPO3 Content Blocks](https://docs.typo3.org/permalink/friendsoftypo3-content-blocks:migrations-mask).
-At the time of writing Content Blocks has no GUI, but there is a plan to build one.
+This is a fork of [Mask](https://github.com/Gernott/mask) by WEBprofil – Gernot Ploiner e.U. and Nikita Hovratov.
+The original package `mask/mask` is no longer maintained. This fork continues it and adds TYPO3 v14 support.
+It is not affiliated with the original maintainers.
+
+The extension key stays `mask`, so existing installations, content elements, database fields and templates keep working.
+
+### Switching from `mask/mask`
+
+```bash
+composer remove mask/mask
+composer require michael-nussbaumer/mask
+```
+
+The package replaces `mask/mask`, so both can't be installed at the same time.
+This fork is not published in the TYPO3 Extension Repository (TER). Without Composer, download the release zip from
+GitHub and upload it in the Extension Manager.
 
 ![Page and Content masks for TYPO3](Resources/Public/Images/banner.jpg)
 
-[![TYPO3 compatibility](https://img.shields.io/badge/TYPO3-13.4%20%7C%2012.4-ff8700?maxAge=3600&logo=typo3)](https://get.typo3.org/)
-[![TYPO3 Verified](https://img.shields.io/badge/TYPO3-verified-ff8700?logo=typo3)](https://typo3.com/typo3-cms/verified-extensions-integrations-for-typo3/extensions/mask-create-custom-content-elements-in-typo3)
-[![Release](https://img.shields.io/github/v/release/gernott/mask?sort=semver)](https://extensions.typo3.org/extension/mask/)
-[![Total Downloads](https://poser.pugx.org/mask/mask/d/total.svg)](https://packagist.org/packages/mask/mask)
-[![Monthly Downloads](https://poser.pugx.org/mask/mask/d/monthly)](https://packagist.org/packages/mask/mask)
-[![Tests](https://img.shields.io/github/actions/workflow/status/Gernott/mask/tests.yaml?branch=main)](https://github.com/Gernott/mask/actions/workflows/tests.yaml)
+[![TYPO3 compatibility](https://img.shields.io/badge/TYPO3-14.3%20%7C%2013.4-ff8700?maxAge=3600&logo=typo3)](https://get.typo3.org/)
+[![Release](https://img.shields.io/github/v/release/Michael-Nussbaumer/mask?sort=semver)](https://github.com/Michael-Nussbaumer/mask/releases)
+[![Total Downloads](https://poser.pugx.org/michael-nussbaumer/mask/d/total.svg)](https://packagist.org/packages/michael-nussbaumer/mask)
+[![Tests](https://img.shields.io/github/actions/workflow/status/Michael-Nussbaumer/mask/tests.yaml?branch=main)](https://github.com/Michael-Nussbaumer/mask/actions/workflows/tests.yaml)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
 # TYPO3 extension `mask` :performing_arts:
@@ -31,9 +41,9 @@ via TCA overrides or DataProcessors.
 
 |                  | URL                                            |
 |------------------|------------------------------------------------|
-| **Repository:**  | https://github.com/Gernott/mask                |
-| **Read online:** | https://docs.typo3.org/p/mask/mask/main/en-us/ |
-| **TER:**         | https://extensions.typo3.org/extension/mask    |
+| **Repository:**  | https://github.com/Michael-Nussbaumer/mask                         |
+| **Packagist:**   | https://packagist.org/packages/michael-nussbaumer/mask             |
+| **Read online:** | https://docs.typo3.org/p/mask/mask/main/en-us/ (original project) |
 
 ## TYPO3 v13 Sponsor
 
@@ -44,7 +54,7 @@ Big thanks to [webconsulting](https://webconsulting.at/) for sponsoring the work
 ## Quickstart :rocket:
 
 1. Add Mask as a dependency in your `ext_emconf.php` and/or `composer.json` of your sitepackage.
-2. Download Mask with composer by running the command `composer require mask/mask` or install via extension manager.
+2. Download Mask with composer by running the command `composer require michael-nussbaumer/mask` or upload the release zip in the extension manager.
 3. Activate Mask in the extension manager (not needed in TYPO3 v11 composer mode).
 4. Mask requires `fluid_styled_content` so go to your static includes in the template module and include it there.
 5. Also include the Mask static TypoScript.
@@ -73,7 +83,8 @@ Read a detailed explanation for each advantage and why to use Mask over other al
 
 | Mask Version | TYPO3 Version | Release Date | Status       | More Info                                                                                              |
 |--------------|---------------|--------------|--------------|--------------------------------------------------------------------------------------------------------|
-| v9.0         | v12, v13      | 2024-11-13   | bugfix only  | [TYPO3 v13 support](https://github.com/Gernott/mask/releases/tag/v9.0.0)                               |
+| v10.0        | v13, v14      | unreleased   | development  | TYPO3 v14 support (fork)                                                                               |
+| v9.0         | v12, v13      | 2024-11-13   | discontinued | [TYPO3 v13 support](https://github.com/Gernott/mask/releases/tag/v9.0.0)                               |
 | v8.3         | v11, v12      | 2023-08-09   | discontinued | [Mask Events](https://docs.typo3.org/p/mask/mask/main/en-us/ChangeLog/8.3/Index.html)                  |
 | v8.2         | v11, v12      | 2023-06-12   | discontinued | [TCA columnsOverride support](https://docs.typo3.org/p/mask/mask/main/en-us/ChangeLog/8.2/Index.html)  |
 | v8.1         | v11, v12      | 2023-05-02   | discontinued | [Deprecation free, new types](https://docs.typo3.org/p/mask/mask/main/en-us/ChangeLog/8.1/Index.html)  |
@@ -97,15 +108,13 @@ Read a detailed explanation for each advantage and why to use Mask over other al
 ## Found a bug? :boom:
 
 * First check out the main branch and verify that the issue is not yet solved
-* Have a look at the existing [issues](https://github.com/gernott/mask/issues/), to prevent duplicates
-* If not found, report the bug in our [issue tracker](https://github.com/gernott/mask/issues/new/)
+* Have a look at the existing [issues](https://github.com/Michael-Nussbaumer/mask/issues), to prevent duplicates
+* If not found, report the bug in the [issue tracker](https://github.com/Michael-Nussbaumer/mask/issues/new)
 
 ## Like a new feature? :bulb:
 
-* Have a look at our [project page](https://github.com/Gernott/mask/projects/1)
-* If your idea is not listed here, get in [contact](https://mask.webprofil.at/imprint/) with us
-* If you want to sponsor a feature, get in [contact](https://mask.webprofil.at/imprint/) with us
-* If you want to develop a feature, get in [contact](https://mask.webprofil.at/imprint/) to plan a strategy
+* Open a [feature request](https://github.com/Michael-Nussbaumer/mask/issues/new) in the issue tracker
+* Pull requests are welcome
 
 ## [Sponsors](https://docs.typo3.org/p/mask/mask/main/en-us/Sponsors/Index.html) :handshake:
 

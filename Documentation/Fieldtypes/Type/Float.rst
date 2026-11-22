@@ -7,7 +7,7 @@ Float
 
 .. figure:: ../../Images/FieldTypes/Float.svg
    :alt: Float
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for floats.

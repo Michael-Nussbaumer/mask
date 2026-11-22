@@ -11,7 +11,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Test if the documentation will render without warnings
+        # "bash" enables pipefail, so the exit code of the renderer is kept despite tee
+        shell: bash
         run: |
-          mkdir -p Documentation-GENERATED-temp \
-          && docker run --rm --pull always -v $(pwd):/project \
-             ghcr.io/typo3-documentation/render-guides:latest --config=Documentation --no-progress --fail-on-log
+          mkdir -p Documentation-GENERATED-temp
+          docker run --rm --pull always -v $(pwd):/project \
+             ghcr.io/typo3-documentation/render-guides:latest --config=Documentation --no-progress --fail-on-log 2>&1 | tee render.log
+
+      - name: Annotate rendering problems
+        if: failure()
+        run: grep -iE "warning|error|critical" render.log | head -20 | sed 's/^/::error::/' || true

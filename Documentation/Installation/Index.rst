@@ -34,7 +34,7 @@ anymore, when in composer mode.
 
    {
       "require": {
-         "mask/mask": "^8.1"
+         "michael-nussbaumer/mask": "^10.0"
       }
    }
 
@@ -48,7 +48,7 @@ Install and configure
 
 .. rst-class:: bignums
 
-   #. Download Mask with composer by running the command `composer require mask/mask` or install via extension manager.
+   #. Download Mask with composer by running the command `composer require michael-nussbaumer/mask` or upload the release zip in the extension manager.
 
    #. Activate Mask in the extension manager (not needed in TYPO3 Composer mode)
 

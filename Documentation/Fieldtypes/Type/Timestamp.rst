@@ -7,7 +7,7 @@ Timestamp
 
 .. figure:: ../../Images/FieldTypes/Timestamp.svg
    :alt: Timestamp
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for a date (stored as UNIX timestamp).

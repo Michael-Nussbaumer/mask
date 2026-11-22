@@ -48,6 +48,7 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -59,7 +60,8 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 
 /**
  * @internal
@@ -79,6 +81,7 @@ class AjaxController
     protected LoaderInterface $loader;
     protected EventDispatcherInterface $eventDispatcher;
     protected Features $features;
+    protected ViewFactoryInterface $viewFactory;
 
     /**
      * @var array<string, string>
@@ -111,6 +114,7 @@ class AjaxController
         LoaderInterface $loader,
         EventDispatcherInterface $eventDispatcher,
         Features $features,
+        ViewFactoryInterface $viewFactory,
         array $maskExtensionConfiguration
     ) {
         $this->storageRepository = $storageRepository;
@@ -126,6 +130,7 @@ class AjaxController
         $this->loader = $loader;
         $this->eventDispatcher = $eventDispatcher;
         $this->features = $features;
+        $this->viewFactory = $viewFactory;
         $this->flashMessageQueue = new FlashMessageQueue('mask');
     }
 
@@ -260,11 +265,13 @@ class AjaxController
     {
         $params = $request->getQueryParams();
         $html = $this->htmlCodeGenerator->generateHtml($params['key'], $params['table']);
-        $view = GeneralUtility::makeInstance(StandaloneView::class);
-        $view->getRenderingContext()->getTemplatePaths()->fillDefaultsByPackageName('mask');
-        $view->setTemplate('Ajax/ShowHtml');
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            templateRootPaths: ['EXT:mask/Resources/Private/Templates'],
+            partialRootPaths: ['EXT:mask/Resources/Private/Partials'],
+            request: $request,
+        ));
         $view->assign('html', $html);
-        return new HtmlResponse($view->render());
+        return new HtmlResponse($view->render('Ajax/ShowHtml'));
     }
 
     public function save(ServerRequestInterface $request): Response
@@ -393,7 +400,7 @@ class AjaxController
                 'label' => $element->label,
                 'translatedLabel' => $translatedLabel !== $element->label ? $translatedLabel : '',
                 'shortLabel' => $element->shortLabel,
-                'iconMarkup' => $this->iconFactory->getIcon('mask-ce-' . $element->key, 'medium', $overlay)->render(),
+                'iconMarkup' => $this->iconFactory->getIcon('mask-ce-' . $element->key, IconSize::MEDIUM, $overlay)->render(),
                 'templateExists' => $this->contentElementTemplateExists($element->key) ? 1 : 0,
                 'hidden' => $element->hidden ? 1 : 0,
                 'count' => $this->getElementCount($element->key),

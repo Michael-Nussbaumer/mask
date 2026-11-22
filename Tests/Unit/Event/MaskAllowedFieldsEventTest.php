@@ -18,13 +18,12 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit\Event;
 
 use MASK\Mask\Event\MaskAllowedFieldsEvent;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class MaskAllowedFieldsEventTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function fieldsCanBeFetched(): void
     {
         $allowedFields = [
@@ -39,9 +38,7 @@ class MaskAllowedFieldsEventTest extends UnitTestCase
         self::assertSame($allowedFields, $event->getAllowedFields());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fieldsCanBeReplaced(): void
     {
         $allowedFields = [
@@ -64,9 +61,7 @@ class MaskAllowedFieldsEventTest extends UnitTestCase
         self::assertSame($expected, $event->getAllowedFields());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fieldCanBeAdded(): void
     {
         $allowedFields = [
@@ -90,9 +85,7 @@ class MaskAllowedFieldsEventTest extends UnitTestCase
         self::assertSame($expected, $event->getAllowedFields());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fieldCanBeRemoved(): void
     {
         $allowedFields = [

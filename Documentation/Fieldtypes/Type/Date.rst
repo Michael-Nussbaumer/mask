@@ -7,7 +7,7 @@ Date
 
 .. figure:: ../../Images/FieldTypes/Date.svg
    :alt: Date
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for a date (stored as MySQL DATE type).

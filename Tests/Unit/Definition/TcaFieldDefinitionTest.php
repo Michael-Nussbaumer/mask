@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace MASK\Mask\Tests\Unit\Definition;
 
 use MASK\Mask\Definition\TcaFieldDefinition;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 class TcaFieldDefinitionTest extends UnitTestCase
@@ -639,18 +641,14 @@ class TcaFieldDefinitionTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider createFromArrayWorksOnLegacyFormatDataProvider
-     * @test
-     */
+    #[DataProvider('createFromArrayWorksOnLegacyFormatDataProvider')]
+    #[Test]
     public function createFromArrayWorksOnLegacyFormat(array $json, array $expected): void
     {
         self::assertEquals($expected, TcaFieldDefinition::createFromFieldArray($json)->toArray());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function defaultMinitemsMaxitemsNotAddedForCoreFields(): void
     {
         $input = [
@@ -767,10 +765,10 @@ class TcaFieldDefinitionTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider hasTypeReturnsTrueIfTypeCanBeFoundDataProvider
-     * @test
      * @param array<string, mixed> $json
      */
+    #[DataProvider('hasTypeReturnsTrueIfTypeCanBeFoundDataProvider')]
+    #[Test]
     public function hasTypeReturnsTrueIfTypeCanBeFound(array $json, bool $expected, string $elementKey): void
     {
         $tcaFieldDefinition = TcaFieldDefinition::createFromFieldArray($json);
@@ -855,10 +853,10 @@ class TcaFieldDefinitionTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getTypeReturnsTypeIfTypeCanBeFoundDataProvider
-     * @test
      * @param array<string, mixed> $json
      */
+    #[DataProvider('getTypeReturnsTypeIfTypeCanBeFoundDataProvider')]
+    #[Test]
     public function getTypeReturnsTypeIfTypeCanBeFound(array $json, string $expected, string $elementKey): void
     {
         $tcaFieldDefinition = TcaFieldDefinition::createFromFieldArray($json);
@@ -889,10 +887,10 @@ class TcaFieldDefinitionTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getTypeThrowsExceptionIfTypeCanNotBeFoundDataProvider
-     * @test
      * @param array<string, mixed> $json
      */
+    #[DataProvider('getTypeThrowsExceptionIfTypeCanNotBeFoundDataProvider')]
+    #[Test]
     public function getTypeThrowsExceptionIfTypeCanNotBeFound(array $json, string $elementKey): void
     {
         $tcaFieldDefinition = TcaFieldDefinition::createFromFieldArray($json);
@@ -940,10 +938,10 @@ class TcaFieldDefinitionTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider isNullableReturnsTrueIfTCADefinesNullableFieldDataProvider
-     * @test
      * @param array<string, mixed> $json
      */
+    #[DataProvider('isNullableReturnsTrueIfTCADefinesNullableFieldDataProvider')]
+    #[Test]
     public function isNullableReturnsTrueIfTCADefinesNullableField(array $json, bool $expected): void
     {
         $tcaFieldDefinition = TcaFieldDefinition::createFromFieldArray($json);

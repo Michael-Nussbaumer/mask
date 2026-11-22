@@ -7,7 +7,7 @@ Inline (Repeating)
 
 .. figure:: ../../Images/FieldTypes/Inline.svg
    :alt: Inline
-   :class: float-left
+   :align: left
    :width: 64px
 
 Repeating field, using IRRE technique. You can add repeating subfields to this item.

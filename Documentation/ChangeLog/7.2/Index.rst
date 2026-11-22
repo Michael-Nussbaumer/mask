@@ -23,7 +23,7 @@ Slug
 
 .. figure:: ../../Images/FieldTypes/Slug.svg
    :alt: Slug
-   :class: float-left
+   :align: left
    :width: 64px
 
 The :ref:`slug <fields-slug>` field can be used to create a unique identifier based on another field.
@@ -37,7 +37,7 @@ Category
 
 .. figure:: ../../Images/FieldTypes/Category.svg
    :alt: Check
-   :class: float-left
+   :align: left
    :width: 64px
 
 TYPO3 v11 introduced the new TCA type :ref:`category <fields-category>`. This can be seen as a shortcut
@@ -53,7 +53,7 @@ Media
 
 .. figure:: ../../Images/FieldTypes/Media.svg
    :alt: Media
-   :class: float-left
+   :align: left
    :width: 64px
 
 The :ref:`media <fields-media>` type is, just like type file, a file reference field. The only

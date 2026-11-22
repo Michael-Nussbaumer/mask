@@ -21,6 +21,7 @@ use MASK\Mask\Definition\TableDefinitionCollection;
 use MASK\Mask\Loader\JsonLoader;
 use MASK\Mask\Migrations\MigrationManager;
 use MASK\Mask\Tests\Unit\PackageManagerTrait;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -33,12 +34,10 @@ class JsonLoaderTest extends UnitTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        GeneralUtility::rmdir(GeneralUtility::getFileAbsFileName('EXT:mask/var/mask.json'));
+        GeneralUtility::rmdir(self::getMaskExtensionPath() . 'var/mask.json');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function load(): void
     {
         $this->registerPackageManager();
@@ -54,9 +53,7 @@ class JsonLoaderTest extends UnitTestCase
         self::assertEquals($this->getExpectedConfigurationArray(), $jsonLoader->load()->toArray(false));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function write(): void
     {
         $this->registerPackageManager();
@@ -383,9 +380,7 @@ class JsonLoaderTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function brokenConfigurationRaisesException(): void
     {
         $this->registerPackageManager();

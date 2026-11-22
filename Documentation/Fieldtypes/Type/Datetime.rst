@@ -7,7 +7,7 @@ Datetime
 
 .. figure:: ../../Images/FieldTypes/Datetime.svg
    :alt: Datetime
-   :class: float-left
+   :align: left
    :width: 64px
 
 An input field for date and time (stored as MySQL DATETIME type).
