@@ -97,7 +97,7 @@
 		"typo3/cms": {
 			"extension-key": "mask",
 			"web-dir": ".Build/Web",
-			"version": "9.0.11",
+			"version": "14.0.0",
 			"Package": {
 				"providesPackages": {}
 			}
