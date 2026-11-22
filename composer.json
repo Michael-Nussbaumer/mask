@@ -1,6 +1,7 @@
 {
 	"name": "mask/mask",
 	"type": "typo3-cms-extension",
+	"version": "14.0.0",
 	"description": "Create your own content elements and page templates. Easy to use, even without programming skills because of the comfortable drag and drop user interface. Stored in structured database tables. Style your frontend with Fluid tags. Ideal, if you want to switch from Templavoila.",
 	"homepage": "https://extensions.typo3.org/extension/mask",
 	"support": {
